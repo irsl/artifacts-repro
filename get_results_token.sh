@@ -15,9 +15,9 @@ fi
 
 >&2 echo "Trying to extract it from the Runner's memory"
 
-sudo apt -y install gdb
+sudo apt -y install gdb >&2
 scriptdir=$(realpath $(dirname $0))
-(cd /tmp && sudo "$scriptdir/dump.sh" $(pidof Runner.Listener))
+(cd /tmp && sudo "$scriptdir/dump.sh" $(pidof Runner.Listener) >&2)
 tokens="$(python3 ./idtoken_extractor.py /tmp)"
 
 for token in $tokens; do

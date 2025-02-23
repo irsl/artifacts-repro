@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +e
+
 if [[ -z "$1" ]]; then
   echo "Usage: $0 runtime-token-str|double-b64-encoded-actions-environment-json-str"
   exit 1
