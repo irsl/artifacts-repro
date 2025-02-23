@@ -1,0 +1,30 @@
+# This workflow demonstrates that $ACTIONS_ID_TOKEN_REQUEST_TOKEN
+# has full access to the twirp artifact APIs
+
+name: token_request_token
+
+on: workflow_dispatch
+
+jobs:
+  main:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+
+      - name: Run commands
+        shell: bash
+        run: |
+          set -xe
+
+          token="$(./get_results_token.sh)"
+          source ./artifacts-env.sh "$token"
+
+          UPLOAD_URL="$(curl  -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "hello1.txt", "version": 4 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/CreateArtifact" | jq -r .signed_upload_url)"
+          curl -X PUT -d "$token" -H "Content-Type: application/octet-stream" -H "x-ms-version: 2025-01-05" -H "Accept: application/xml" -H "x-ms-blob-type: BlockBlob" -H "User-Agent: azsdk-js-azure-storage-blob/12.26.0 core-rest-pipeline/1.19.0 Node/22.8.0 OS/(x64-Linux-5.10.102.1-microsoft-standard-WSL2)" -H "x-ms-client-request-id: 36478bd5-cb6a-4ddc-845e-703232ba6ea4"  "$UPLOAD_URL" -v
+          curl -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "hello1.txt", "size": 8 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/FinalizeArtifact"
+          echo "Ready, ACTIONS_ID_TOKEN_REQUEST_TOKEN uploaded as an artifact"
