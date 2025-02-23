@@ -1,6 +1,6 @@
 # Demonstrating a path traversal via artifact names
 
-name: archive confusion
+name: path traversal via artifact names
 
 on: workflow_dispatch
 
