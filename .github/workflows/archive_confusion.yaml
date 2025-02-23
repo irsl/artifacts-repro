@@ -1,4 +1,7 @@
 # Demonstrating archive confusion (tar instead of zip)
+# Note: this does not seem exploitable, I didn't find an archiver
+# that ignores file externsions, supports tar and extracts symbolic links.
+# 7z was pretty close, but it does not support links.
 
 name: archive confusion
 
