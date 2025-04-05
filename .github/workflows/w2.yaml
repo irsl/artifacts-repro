@@ -24,8 +24,8 @@ jobs:
           source ./artifacts-env.sh "$token"
 
           # from w1
-          B1=5944bd71-69d2-4f39-b7a7-da74e8b9b15d
-          B2=a6fe42f4-2b81-59e8-5c7c-1a0db487583c
+          #B1=5944bd71-69d2-4f39-b7a7-da74e8b9b15d
+          #B2=a6fe42f4-2b81-59e8-5c7c-1a0db487583c
 
           RESPONSE="$(curl  -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "hello1.txt", "version": 4 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/CreateArtifact")"
           echo "$RESPONSE"
