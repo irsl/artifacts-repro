@@ -1,0 +1,29 @@
+# This workflow demonstrates that $ACTIONS_ID_TOKEN_REQUEST_TOKEN
+# has full access to the twirp artifact APIs
+
+name: w1
+
+on: workflow_dispatch
+
+jobs:
+  main:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+
+      - name: Run commands
+        shell: bash
+        run: |
+          set -xe
+
+          token="$(./get_results_token.sh)"
+          source ./artifacts-env.sh "$token"
+
+          echo B1: $B1
+          echo B2: $B2
+          sleep 1800
